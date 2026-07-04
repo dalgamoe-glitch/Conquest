@@ -55,6 +55,7 @@
 .section__title {
   font-size: var(--step-3);
   white-space: pre-line;
+  text-shadow: 0 2px 30px rgba(4, 7, 10, 0.9), 0 0 12px rgba(4, 7, 10, 0.6);
 }
 .section__body {
   color: var(--muted);
@@ -157,6 +158,7 @@
   font-weight: 600;
   line-height: 1.02;
   letter-spacing: -0.02em;
+  text-shadow: 0 2px 30px rgba(4, 7, 10, 0.85);
 }
 .manifesto__lines .l2 {
   color: transparent;
@@ -170,6 +172,7 @@
   font-size: var(--step-1);
   color: var(--muted);
   margin-left: auto;
+  text-shadow: 0 1px 16px rgba(4, 7, 10, 0.92);
 }
 
 /* ---------- Packages ---------- */
@@ -230,7 +233,7 @@
 }
 .pkg__flag {
   font-family: var(--font-mono);
-  font-size: 0.66rem;
+  font-size: 0.72rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: #04070a;
@@ -273,7 +276,7 @@
 }
 .pkg__price-note {
   font-family: var(--font-mono);
-  font-size: 0.68rem;
+  font-size: 0.72rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--faint);
@@ -301,7 +304,7 @@
 .pkg__badge {
   margin-top: var(--space-8);
   font-family: var(--font-mono);
-  font-size: 0.68rem;
+  font-size: 0.72rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--mint-soft);
@@ -344,7 +347,7 @@
   border: 1px solid var(--line-strong);
   box-shadow: var(--glow-mint);
   font-family: var(--font-mono);
-  font-size: 0.62rem;
+  font-size: 0.7rem;
   letter-spacing: 0.16em;
   text-transform: uppercase;
   color: var(--mint-soft);
@@ -369,6 +372,25 @@
   gap: 6px;
   width: 130px;
 }
+/* Soft scrim so node labels/hints stay legible over bright particle clusters. */
+.node::before {
+  content: '';
+  position: absolute;
+  z-index: -1;
+  left: 50%;
+  top: 58%;
+  width: 168px;
+  height: 96px;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(
+    50% 50% at 50% 50%,
+    rgba(4, 7, 10, 0.85),
+    rgba(4, 7, 10, 0.4) 55%,
+    transparent 75%
+  );
+  border-radius: 50%;
+  pointer-events: none;
+}
 .node__dot {
   width: 12px;
   height: 12px;
@@ -389,7 +411,7 @@
 }
 .node__hint {
   font-family: var(--font-mono);
-  font-size: 0.6rem;
+  font-size: 0.72rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: var(--muted);
@@ -418,11 +440,13 @@
   font-size: var(--step-1);
   margin-top: var(--space-6);
   color: var(--text);
+  text-shadow: 0 1px 16px rgba(4, 7, 10, 0.9);
 }
 .step__body {
   margin-top: var(--space-4);
   color: var(--muted);
   font-size: var(--step--1);
+  text-shadow: 0 1px 14px rgba(4, 7, 10, 0.92);
 }
 
 /* ---------- CTA ---------- */
@@ -492,6 +516,8 @@ html.no-js .reveal,
 }
 
 /* ---------- Responsive ---------- */
+
+/* Tablet portrait & below (iPad portrait, phones) */
 @media (max-width: 900px) {
   .packages__grid {
     grid-template-columns: 1fr;
@@ -504,15 +530,76 @@ html.no-js .reveal,
   .manifesto__body {
     margin-left: 0;
   }
+
+  /* The radial constellation clips on narrow screens — swap it for a readable
+     2-column card grid. The inline left/top from dom.js become inert once the
+     nodes are position:static, so no JS change is needed. */
+  .constellation {
+    width: 100%;
+    max-width: 460px;
+    aspect-ratio: auto;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+    margin-top: clamp(32px, 6vh, 60px);
+  }
+  .constellation__ring {
+    display: none;
+  }
+  .constellation__core {
+    position: static;
+    grid-column: 1 / -1;
+    width: auto;
+    height: auto;
+    aspect-ratio: auto;
+    border-radius: 14px;
+    padding: 16px;
+    font-size: 0.74rem;
+  }
+  .node {
+    position: static;
+    transform: none;
+    width: auto;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    grid-template-areas:
+      'dot label'
+      '.   hint';
+    align-items: center;
+    gap: 3px 10px;
+    padding: 13px 15px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: rgba(11, 16, 20, 0.5);
+    backdrop-filter: blur(8px);
+    text-align: left;
+  }
+  .node::before {
+    display: none;
+  }
+  .node__dot {
+    grid-area: dot;
+    align-self: center;
+  }
+  .node__label {
+    grid-area: label;
+    align-self: center;
+  }
+  .node__hint {
+    grid-area: hint;
+    display: block;
+  }
 }
+
+/* Phones */
 @media (max-width: 560px) {
   .nav {
     padding-inline: 18px;
   }
   .nav .btn {
-    padding: 9px 13px;
-    font-size: 0.58rem;
-    letter-spacing: 0.06em;
+    padding: 11px 14px;
+    font-size: 0.62rem;
+    letter-spacing: 0.08em;
   }
   .nav .btn .btn__arrow {
     display: none;
@@ -523,22 +610,23 @@ html.no-js .reveal,
   .process__grid {
     grid-template-columns: 1fr;
   }
+}
+
+/* Small phones — single-column capability cards */
+@media (max-width: 420px) {
   .constellation {
-    width: min(680px, 66vw);
+    grid-template-columns: 1fr;
   }
-  .node {
-    width: 80px;
+}
+
+/* Short landscape (phones rotated): let the hero breathe instead of clipping */
+@media (max-height: 520px) and (orientation: landscape) {
+  .hero {
+    min-height: auto;
+    padding-block: clamp(76px, 20vh, 120px);
   }
-  .node__label {
-    font-size: var(--step--1);
-  }
-  .node__hint {
+  .hero__scroll {
     display: none;
-  }
-  .constellation__core {
-    width: 84px;
-    height: 84px;
-    font-size: 0.56rem;
   }
 }
 

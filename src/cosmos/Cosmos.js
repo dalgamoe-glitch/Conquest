@@ -51,8 +51,8 @@ export function createCosmos(canvas) {
   rig.add(galaxy.object);
 
   const blackHole = createBlackHole({ count: isMobile ? 6000 : 14000 });
-  blackHole.object.position.set(0, -0.5, 0);
-  blackHole.object.scale.setScalar(0.9);
+  blackHole.object.position.set(0, -0.2, 0);
+  blackHole.object.scale.setScalar(0.4);
   blackHole.object.visible = false;
   rig.add(blackHole.object);
 
@@ -73,8 +73,12 @@ export function createCosmos(canvas) {
   const clock = new THREE.Clock();
   let running = false;
   let rafId = 0;
-  let scroll = 0; // target scroll progress 0..1
+  let scroll = 0; // global page progress 0..1 (camera dolly)
   let scrollEased = 0;
+  let morph = 0; // galaxy -> constellation (capabilities section)
+  let morphEased = 0;
+  let collapse = 0; // constellation -> core (CTA section)
+  let collapseEased = 0;
   const pointer = { x: 0, y: 0, tx: 0, ty: 0 };
 
   function onPointerMove(e) {
@@ -94,36 +98,44 @@ export function createCosmos(canvas) {
     bloom.setSize(w, h);
   }
 
-  function applyScroll(p) {
-    // Hero (0) -> content mid (0.5) -> black hole finale (1).
-    const galaxyFade = 1 - smoothstep(0.34, 0.62, p) * 0.86;
-    galaxy.setOpacity(galaxyFade);
-    galaxy.object.scale.setScalar(lerp(1, 1.5, smoothstep(0, 0.6, p)));
-    // Keep the bright core below the hero copy at the top of the page.
-    galaxy.object.position.y = lerp(-1.4, 1.8, smoothstep(0, 0.6, p));
-    galaxy.object.rotation.x = 0.5 + smoothstep(0, 1, p) * 0.5;
+  // Camera flies in over the full page — a bit more cinematic than before, but
+  // still smooth and never disorienting.
+  function applyCamera(p) {
+    const e = smoothstep(0, 1, p);
+    camera.position.z = lerp(15, 8.5, e);
+    camera.position.y = lerp(1.4, 0.15, smoothstep(0.2, 1, p));
+    rig.rotation.z = lerp(0, 0.14, smoothstep(0.25, 1, p)); // gentle roll
+  }
 
-    const bhReveal = smoothstep(0.5, 0.78, p);
-    blackHole.object.visible = bhReveal > 0.001;
-    blackHole.setOpacity(bhReveal);
-    blackHole.object.scale.setScalar(lerp(0.55, 1.05, bhReveal));
-    blackHole.object.position.y = lerp(-3.2, -0.4, bhReveal);
+  // Galaxy <-> constellation morph (driven by the capabilities section) and the
+  // collapse-to-core finale (driven by the CTA section).
+  function applyScene(m, c) {
+    galaxy.setMorph(m);
+    galaxy.setCollapse(c);
+    galaxy.setOpacity(1);
+    // Tilt the disk flat to face the camera as it becomes the constellation.
+    galaxy.object.rotation.x = lerp(0.5, 0.0, m);
+    galaxy.object.scale.setScalar(lerp(1.0, 1.28, m) * lerp(1.0, 0.82, c));
 
-    // Gentle camera dolly — subtle, never disorienting.
-    camera.position.z = lerp(14, 10.5, smoothstep(0, 1, p));
-    camera.position.y = lerp(1.2, 0.2, smoothstep(0.4, 1, p));
+    // The black hole is the "singularity" that the particles collapse into.
+    blackHole.object.visible = c > 0.001;
+    blackHole.setOpacity(c);
+    blackHole.object.scale.setScalar(lerp(0.4, 1.0, c));
   }
 
   function tick() {
     rafId = requestAnimationFrame(tick);
     const t = clock.getElapsedTime();
 
-    // Ease scroll + pointer for smoothness.
+    // Ease scroll + morph + pointer for smoothness.
     scrollEased += (scroll - scrollEased) * 0.08;
+    morphEased += (morph - morphEased) * 0.09;
+    collapseEased += (collapse - collapseEased) * 0.09;
     pointer.x += (pointer.tx - pointer.x) * 0.05;
     pointer.y += (pointer.ty - pointer.y) * 0.05;
 
-    applyScroll(scrollEased);
+    applyCamera(scrollEased);
+    applyScene(morphEased, collapseEased);
 
     rig.rotation.y = pointer.x * 0.18;
     rig.rotation.x = pointer.y * 0.1;
@@ -154,10 +166,19 @@ export function createCosmos(canvas) {
     setScroll(p) {
       scroll = clamp(p, 0, 1);
     },
+    setMorph(m) {
+      morph = clamp(m, 0, 1);
+    },
+    setCollapse(c) {
+      collapse = clamp(c, 0, 1);
+    },
     // Render a single frame (used for reduced-motion static shot).
     renderStatic(p = 0.12) {
       scrollEased = p;
-      applyScroll(p);
+      morphEased = 0;
+      collapseEased = 0;
+      applyCamera(p);
+      applyScene(0, 0);
       starfield.update(2.0);
       galaxy.update(2.0);
       blackHole.update(2.0);
