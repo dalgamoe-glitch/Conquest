@@ -1,0 +1,58 @@
+:root {
+  /* Palette — carbon black + mint green + light blue */
+  --bg: #04070a;
+  --bg-elev: #0b1014;
+  --bg-elev-2: #0f161b;
+
+  --mint: #6ff3c7;
+  --mint-soft: #9ff7d9;
+  --blue: #7cc7ff;
+  --cyan: #5fe6d8;
+
+  --text: #eaf6f1;
+  --muted: #8ca39c;
+  --faint: #5b6f69;
+
+  --line: rgba(111, 243, 199, 0.14);
+  --line-strong: rgba(111, 243, 199, 0.28);
+  --scrim: rgba(4, 7, 10, 0.72);
+
+  /* Glows */
+  --glow-mint: 0 0 40px rgba(111, 243, 199, 0.35);
+  --glow-blue: 0 0 40px rgba(124, 199, 255, 0.28);
+
+  /* Type */
+  --font-display: 'Space Grotesk', system-ui, sans-serif;
+  --font-body: 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, monospace;
+
+  /* Fluid type scale */
+  --step--1: clamp(0.78rem, 0.75rem + 0.15vw, 0.88rem);
+  --step-0: clamp(1rem, 0.96rem + 0.2vw, 1.12rem);
+  --step-1: clamp(1.2rem, 1.1rem + 0.5vw, 1.5rem);
+  --step-2: clamp(1.6rem, 1.4rem + 1vw, 2.4rem);
+  --step-3: clamp(2.2rem, 1.8rem + 2vw, 3.6rem);
+  --step-hero: clamp(3.4rem, 1.5rem + 9vw, 12rem);
+
+  /* Spacing rhythm */
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-12: 48px;
+  --space-16: 64px;
+  --space-24: 96px;
+  --space-32: 128px;
+
+  --radius: 14px;
+  --radius-lg: 22px;
+  --maxw: 1200px;
+
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur: 260ms;
+
+  --z-bg: 0;
+  --z-content: 10;
+  --z-nav: 40;
+}

@@ -1,0 +1,24 @@
+{
+  "name": "conquest",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Conquest — a cosmos-inspired marketing site for a web & creative agency.",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@fontsource/inter": "^5.1.0",
+    "@fontsource/jetbrains-mono": "^5.1.0",
+    "@fontsource/space-grotesk": "^5.1.0",
+    "gsap": "^3.12.5",
+    "lenis": "^1.1.14",
+    "postprocessing": "^6.36.4",
+    "three": "^0.169.0"
+  },
+  "devDependencies": {
+    "vite": "^5.4.8"
+  }
+}

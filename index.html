@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#04070A" />
+    <title>Conquest — We engineer brands worthy of orbit</title>
+    <meta
+      name="description"
+      content="Conquest is a web & creative studio building cinematic, high-fidelity websites, motion graphics, and on-demand brand systems. Three packages, from a single landing page to a full design-system universe."
+    />
+    <meta property="og:title" content="Conquest — We engineer brands worthy of orbit" />
+    <meta
+      property="og:description"
+      content="Cinematic websites, motion graphics, 3D and on-demand brand systems. Choose your orbit."
+    />
+    <meta property="og:type" content="website" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  </head>
+  <body>
+    <!-- Fixed WebGL cosmos background -->
+    <canvas id="cosmos" aria-hidden="true"></canvas>
+    <!-- Static fallback shown when WebGL/motion is unavailable -->
+    <div id="cosmos-fallback" aria-hidden="true"></div>
+
+    <a class="skip-link" href="#packages">Skip to packages</a>
+
+    <div id="app"></div>
+
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
