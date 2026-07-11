@@ -44,6 +44,19 @@ export function initLogoScroll(lenis) {
   });
 }
 
+// Pressing any "Start a project" / package CTA button also plays the same
+// cinematic scroll back to the hero. These link to mailto:, so the default
+// action (opening the mail client) is left alone — the scroll just runs
+// alongside it as visible confirmation the press registered.
+export function initCtaScroll(lenis) {
+  if (!lenis) return;
+  document.querySelectorAll('a.btn[href^="mailto:"]').forEach((link) => {
+    link.addEventListener('click', () => {
+      lenis.scrollTo(0, { duration: 2.1, easing: cinematicEase });
+    });
+  });
+}
+
 // Section-scoped triggers that drive the WebGL scene beats. Kept separate from
 // global page progress so the morph stays aligned with the capabilities section
 // even if surrounding copy changes.
