@@ -26,6 +26,24 @@ export function initSmoothScroll(onProgress) {
   return lenis;
 }
 
+// Slow-in, slow-out curve for the logo's "return to orbit" scroll — weightier
+// than the default wheel easing, so it reads as a deliberate cinematic beat.
+function cinematicEase(t) {
+  return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+}
+
+// Clicking the wordmark (nav or footer) smooth-scrolls to the hero instead of
+// snapping instantly.
+export function initLogoScroll(lenis) {
+  if (!lenis) return;
+  document.querySelectorAll('a.brand[href="#top"]').forEach((link) => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      lenis.scrollTo(0, { duration: 2.1, easing: cinematicEase });
+    });
+  });
+}
+
 // Section-scoped triggers that drive the WebGL scene beats. Kept separate from
 // global page progress so the morph stays aligned with the capabilities section
 // even if surrounding copy changes.

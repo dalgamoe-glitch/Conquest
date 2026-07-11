@@ -74,9 +74,10 @@ async function boot() {
     }
   }
 
-  const { initSmoothScroll, initSceneTriggers } = await import('./cosmos/scroll.js');
-  initSmoothScroll((p) => cosmos?.setScroll(p));
+  const { initSmoothScroll, initSceneTriggers, initLogoScroll } = await import('./cosmos/scroll.js');
+  const lenis = initSmoothScroll((p) => cosmos?.setScroll(p));
   initSceneTriggers(cosmos);
+  initLogoScroll(lenis);
 
   initReveals({ reducedMotion: false });
 
